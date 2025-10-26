@@ -30,6 +30,18 @@ describe("regexUnescape", () => {
     );
   });
 
+  describe("round-trip basic cases", () => {
+    it.each([["Hello"], ["#$^*+(){}<>\\|. "], ["\n\r\t\f"], ["\\"], [""]])(
+      "escape then unescape: %s",
+      (original) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(original);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(original);
+      }
+    );
+  });
+
   describe("round-trip with RegExp.escape", () => {
     it.each([
       [String.raw`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`],
