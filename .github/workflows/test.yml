@@ -6,10 +6,13 @@ on:
 
 jobs:
   check:
-    name: Run checks
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
       - uses: oven-sh/setup-bun@v2
       - run: bun install
       - run: bun vitest run
