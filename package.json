@@ -1,6 +1,17 @@
 {
   "name": "regex-unescape",
   "version": "0.0.1",
+  "description": "Unescape regex strings - the opposite of RegExp.escape",
+  "keywords": [
+    "regex",
+    "unescape",
+    "regexp",
+    "escape",
+    "string"
+  ],
+  "license": "MIT",
+  "author": "mpoc",
+  "repository": "github:mpoc/regex-unescape",
   "zshy": "./src/index.ts",
   "scripts": {
     "build": "zshy",
