@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "zshy": "./src/index.ts",
   "scripts": {
-    "build": "zshy",
-    "check": "biome check"
+    "build": "zshy"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.0",
