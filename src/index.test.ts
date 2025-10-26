@@ -89,4 +89,126 @@ describe("regexUnescape", () => {
     expect(regexUnescape(String.raw`\v`)).toBe("\v"); // vertical tab
     expect(regexUnescape(String.raw`\b`)).toBe("\b"); // backspace
   });
+
+  describe("commonly used regex patterns", () => {
+    describe("numeric patterns", () => {
+      it.each([
+        ["positive integers", String.raw`^\d+$`],
+        ["negative integers", String.raw`^-\d+$`],
+        ["any integer", String.raw`^-?\d+$`],
+        ["positive decimal", String.raw`^\d*\.?\d+$`],
+        ["negative decimal", String.raw`^-\d*\.?\d+$`],
+        ["any decimal", String.raw`^-?\d*\.?\d+$`],
+        ["year 1900-2099", String.raw`^(19|20)\d{2}$`],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("phone number patterns", () => {
+      it.each([
+        ["basic phone", String.raw`^\+?[\d\s]{3,}$`],
+        ["phone with code", String.raw`^\+?[\d\s]+\(?[\d\s]{10,}$`],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("date and time patterns", () => {
+      it.each([
+        [
+          "date (dd mm yyyy)",
+          String.raw`^([1-9]|0[1-9]|[12][0-9]|3[01])\D([1-9]|0[1-9]|1[012])\D(19[0-9][0-9]|20[0-9][0-9])$`,
+        ],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("IP address patterns", () => {
+      it.each([
+        [
+          "IPv4",
+          String.raw`^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]){3}$`,
+        ],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("alphabetic input patterns", () => {
+      it.each([
+        ["personal name", String.raw`^[\w.']{2,}(\s[\w.']{2,})+$`],
+        ["username", String.raw`^[\w\d_.]{4,}$`],
+        ["password (6+ chars)", String.raw`^.{6,}$`],
+        ["password or empty", String.raw`^.{6,}$|^$`],
+        [
+          "email",
+          String.raw`^[_]*([a-z0-9]+(\.|_*)?)+@([a-z][a-z0-9-]+(\.|-*\.))+[a-z]{2,6}$`,
+        ],
+        ["domain", String.raw`^([a-z][a-z0-9-]+(\.|-*\.))+[a-z]{2,6}$`],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("utility patterns", () => {
+      it.each([
+        ["empty input", String.raw`^$`],
+        // ["blank input", String.raw`^\s\t*$`], // TODO: Fix this case
+        // ["new line", String.raw`[\r\n]|$`], // TODO: Fix this case
+        ["whitespace", String.raw`^\s+$`],
+        ["URL", String.raw`^http\:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$`],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+
+    describe("complex real-world patterns", () => {
+      it.each([
+        [
+          "email validation (complex)",
+          String.raw`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`,
+        ],
+        [
+          "URL with protocol",
+          String.raw`https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}`,
+        ],
+        [
+          "US phone number",
+          String.raw`^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$`,
+        ],
+        ["date (YYYY-MM-DD)", String.raw`^\d{4}-\d{2}-\d{2}$`],
+        ["IPv4 (simple)", String.raw`^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$`],
+        ["hex color", String.raw`^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$`],
+        ["capture digits", String.raw`(.*?)(\d+)(.*)`],
+        ["word boundary", String.raw`\b\w+\b`],
+        ["price with lookbehind", String.raw`(?<=\$)\d+(?:\.\d{2})?`],
+        ["special characters", String.raw`[(){}\[\]<>|.*+?^$\\]`],
+      ])("round-trips %s pattern: %s", (_, pattern) => {
+        // @ts-expect-error FIXME:
+        const escaped = RegExp.escape(pattern);
+        const unescaped = regexUnescape(escaped);
+        expect(unescaped).toBe(pattern);
+      });
+    });
+  });
 });
