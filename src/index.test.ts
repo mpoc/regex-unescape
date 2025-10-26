@@ -60,4 +60,33 @@ describe("regexUnescape", () => {
       expect(unescaped).toBe(pattern);
     });
   });
+
+  it("handles regex meta-characters as literals", () => {
+    expect(regexUnescape(String.raw`\w`)).toBe("w");
+    expect(regexUnescape(String.raw`\d`)).toBe("d");
+    expect(regexUnescape(String.raw`\s`)).toBe("s");
+  });
+
+  it("handles hex escapes", () => {
+    expect(regexUnescape(String.raw`\x41`)).toBe("A"); // 0x41 = 'A'
+    expect(regexUnescape(String.raw`\x0A`)).toBe("\n"); // 0x0A = newline
+  });
+
+  it("handles unicode escapes", () => {
+    expect(regexUnescape(String.raw`\u0041`)).toBe("A"); // U+0041 = 'A'
+    expect(regexUnescape(String.raw`\u2764`)).toBe("❤"); // U+2764 = heart emoji
+  });
+
+  it("handles invalid hex/unicode escapes", () => {
+    expect(regexUnescape(String.raw`\xGG`)).toBe("xGG"); // Invalid hex
+    expect(regexUnescape(String.raw`\x4`)).toBe("x4"); // Only 1 digit
+    expect(regexUnescape(String.raw`\uGGGG`)).toBe("uGGGG"); // Invalid unicode
+  });
+
+  it("handles extended escape sequences", () => {
+    expect(regexUnescape(String.raw`\a`)).toBe("\x07"); // bell/alert
+    expect(regexUnescape(String.raw`\e`)).toBe("\x1B"); // escape character
+    expect(regexUnescape(String.raw`\v`)).toBe("\v"); // vertical tab
+    expect(regexUnescape(String.raw`\b`)).toBe("\b"); // backspace
+  });
 });
