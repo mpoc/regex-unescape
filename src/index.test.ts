@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/style/noMagicNumbers: <tests> */
 import { describe, expect, it } from "vitest";
 import { regexUnescape } from "./index";
 
