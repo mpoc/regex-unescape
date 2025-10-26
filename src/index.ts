@@ -1,6 +1,22 @@
 const HEX_ESCAPE_PATTERN = /^[0-9a-fA-F]{2}$/;
 const UNICODE_ESCAPE_PATTERN = /^[0-9a-fA-F]{4}$/;
 
+/**
+ * Converts escaped characters in a string to their unescaped form, reversing
+ * the transformation performed by `RegExp.escape`.
+ *
+ * Handles escape sequences (`\n`, `\t`), hex escapes (`\x41`), unicode escapes
+ * (`\u0041`), and removes backslashes from escaped special characters.
+ *
+ * @param input - The string containing escaped characters
+ * @returns The unescaped string
+ * @throws {TypeError} If input is not a string
+ *
+ * @example
+ * regexUnescape(String.raw`\\n`) // → newline character
+ * regexUnescape(String.raw`\*`) // → "*"
+ * regexUnescape(String.raw`\\`) // → "\"
+ */
 export const regexUnescape = (input: string): string => {
   if (typeof input !== "string") {
     throw new TypeError("input argument must be a string");
