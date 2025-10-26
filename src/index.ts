@@ -1,5 +1,6 @@
 const HEX_ESCAPE_PATTERN = /^[0-9a-fA-F]{2}$/;
 const UNICODE_ESCAPE_PATTERN = /^[0-9a-fA-F]{4}$/;
+const BACKSLASH = "\\";
 
 /**
  * Converts escaped characters in a string to their unescaped form, reversing
@@ -33,12 +34,12 @@ export const regexUnescape = (input: string): string => {
   const stringEscapes = new Set(["n", "r", "t", "f", "v", "a", "e"]);
 
   while (i < input.length) {
-    if (input[i] === "\\") {
+    if (input[i] === BACKSLASH) {
       if (i + 1 < input.length) {
         const nextChar = input[i + 1];
 
         // Check for double backslash followed by escape sequence (e.g., \\n -> newline)
-        if (nextChar === "\\" && i + 2 < input.length) {
+        if (nextChar === BACKSLASH && i + 2 < input.length) {
           const charAfterBackslash = input[i + 2];
 
           // Only convert \\X to actual character if X is a true string escape (not \b, not regex meta)
@@ -100,7 +101,7 @@ export const regexUnescape = (input: string): string => {
 
           // For \\\\ or \\<any other char>, process as escaped backslash
           // Output one backslash and continue from the character after the second backslash
-          result += "\\";
+          result += BACKSLASH;
           i += 2;
           continue;
         }
@@ -139,8 +140,8 @@ export const regexUnescape = (input: string): string => {
             result += "\x1B"; // escape character
             i += 2;
             break;
-          case "\\":
-            result += "\\";
+          case BACKSLASH:
+            result += BACKSLASH;
             i += 2;
             break;
           case "x":
