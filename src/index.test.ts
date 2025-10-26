@@ -5,7 +5,7 @@ describe("regexUnescape", () => {
   it.each([
     ["Hello", "Hello"],
     [String.raw`\#\$\^\*\+\(\)\{}<>\\\|\.\ `, "#$^*+(){}<>\\|. "],
-    [String.raw`\\n\\r\\t\\f`, "\n\r\t\f"],
+    [String.raw`\\n\\r\\t\\f`, String.raw`\n\r\t\f`],
     [String.raw`\\`, "\\"],
     ["\\", ""],
     ["", ""],
@@ -170,8 +170,8 @@ describe("regexUnescape", () => {
     describe("utility patterns", () => {
       it.each([
         ["empty input", String.raw`^$`],
-        // ["blank input", String.raw`^\s\t*$`], // TODO: Fix this case
-        // ["new line", String.raw`[\r\n]|$`], // TODO: Fix this case
+        ["blank input", String.raw`^\s\t*$`],
+        ["new line", String.raw`[\r\n]|$`],
         ["whitespace", String.raw`^\s+$`],
         ["URL", String.raw`^http\:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
