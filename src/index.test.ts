@@ -1,6 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { regexUnescape } from "./index";
 
+declare global {
+  // biome-ignore lint/style/useConsistentTypeDefinitions: <need to use interface here>
+  interface RegExpConstructor {
+    escape(str: string): string;
+  }
+}
+
+const roundTripPreserves = (pattern: string) => {
+  const escaped = RegExp.escape(pattern);
+  const unescaped = regexUnescape(escaped);
+  return pattern === unescaped;
+};
+
 describe("regexUnescape", () => {
   it.each([
     ["Hello", "Hello"],
@@ -33,10 +46,7 @@ describe("regexUnescape", () => {
     it.each([["Hello"], ["#$^*+(){}<>\\|. "], ["\n\r\t\f"], ["\\"], [""]])(
       "escape then unescape: %s",
       (original) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(original);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(original);
+        expect(roundTripPreserves(original)).toBe(true);
       }
     );
   });
@@ -54,10 +64,7 @@ describe("regexUnescape", () => {
       [String.raw`(?<=\$)\d+(?:\.\d{2})?`],
       [String.raw`[(){}\[\]<>|.*+?^$\\]`],
     ])("escapes and unescapes: %s", (pattern) => {
-      // @ts-expect-error FIXME:
-      const escaped = RegExp.escape(pattern);
-      const unescaped = regexUnescape(escaped);
-      expect(unescaped).toBe(pattern);
+      expect(roundTripPreserves(pattern)).toBe(true);
     });
   });
 
@@ -101,10 +108,7 @@ describe("regexUnescape", () => {
         ["any decimal", String.raw`^-?\d*\.?\d+$`],
         ["year 1900-2099", String.raw`^(19|20)\d{2}$`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -113,10 +117,7 @@ describe("regexUnescape", () => {
         ["basic phone", String.raw`^\+?[\d\s]{3,}$`],
         ["phone with code", String.raw`^\+?[\d\s]+\(?[\d\s]{10,}$`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -127,10 +128,7 @@ describe("regexUnescape", () => {
           String.raw`^([1-9]|0[1-9]|[12][0-9]|3[01])\D([1-9]|0[1-9]|1[012])\D(19[0-9][0-9]|20[0-9][0-9])$`,
         ],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -141,10 +139,7 @@ describe("regexUnescape", () => {
           String.raw`^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]){3}$`,
         ],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -160,10 +155,7 @@ describe("regexUnescape", () => {
         ],
         ["domain", String.raw`^([a-z][a-z0-9-]+(\.|-*\.))+[a-z]{2,6}$`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -175,10 +167,7 @@ describe("regexUnescape", () => {
         ["whitespace", String.raw`^\s+$`],
         ["URL", String.raw`^http\:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
 
@@ -204,10 +193,7 @@ describe("regexUnescape", () => {
         ["price with lookbehind", String.raw`(?<=\$)\d+(?:\.\d{2})?`],
         ["special characters", String.raw`[(){}\[\]<>|.*+?^$\\]`],
       ])("round-trips %s pattern: %s", (_, pattern) => {
-        // @ts-expect-error FIXME:
-        const escaped = RegExp.escape(pattern);
-        const unescaped = regexUnescape(escaped);
-        expect(unescaped).toBe(pattern);
+        expect(roundTripPreserves(pattern)).toBe(true);
       });
     });
   });
