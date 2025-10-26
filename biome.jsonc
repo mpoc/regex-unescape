@@ -8,7 +8,14 @@
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": "off",
-        "noUselessStringRaw": "off"
+        "noUselessStringRaw": "off",
+        "noUselessEscapeInRegex": "off"
+      },
+      "performance": {
+        "useTopLevelRegex": "off"
+      },
+      "suspicious": {
+        "noControlCharactersInRegex": "off"
       }
     }
   }
