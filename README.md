@@ -27,6 +27,9 @@ import { regexUnescape } from "regex-unescape";
 
 regexUnescape(String.raw`\\n\\t`); // → newline + tab
 regexUnescape(String.raw`\*\+`); // → "*+"
+
+// Throws on non-string input (same as RegExp.escape)
+regexUnescape(123); // ❌ Error: input argument must be a string
 ```
 
 ## What gets converted
