@@ -1,0 +1,15 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: Run checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun vitest run
