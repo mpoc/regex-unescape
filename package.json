@@ -1,4 +1,24 @@
 {
   "name": "regex-unescape",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "zshy": "./src/index.ts",
+  "scripts": {
+    "build": "zshy"
+  },
+  "devDependencies": {
+    "zshy": "^0.4.4"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  }
 }
