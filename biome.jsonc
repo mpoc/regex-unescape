@@ -7,7 +7,8 @@
         "noMagicNumbers": "off"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "off"
+        "noExcessiveCognitiveComplexity": "off",
+        "noUselessStringRaw": "off"
       }
     }
   }
